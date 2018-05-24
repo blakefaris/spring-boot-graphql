@@ -1,0 +1,68 @@
+// NOTE: Default snippets can be found here: https://github.com/spring-projects/spring-restdocs/tree/v2.0.0.RELEASE/spring-restdocs-core/src/main/resources/org/springframework/restdocs/templates/asciidoctor
+// And overriden in this project by adding to resources/org/springframework/restdocs/templates/asciidoctor
+
+= Ecommerce Model Service
+Systems {localdate} {localtime};
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+
+:templates: {source}spring-restdocs/src/main/resources/org/springframework/restdocs/templates
+
+[introduction]
+= Introduction
+
+With the focus of defining effective, efficient and maintainable domain models, the model service is designed to provide a canonical model to consumers.
+In an effort to standardize an agreed upon data definition, the domain models will be brand agnostic.  The goal is to create domain models that represent
+the actual domain, not the underlying data structures.  With all this in mind, the domain design should allow for robust consumption and extensibility.
+
+[[overview-http-status-codes]]
+== HTTP status codes
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+
+| `400 Bad Request`
+| The request was malformed. The response body will include an error providing further information
+
+| `404 Not Found`
+| The requested resource did not exist
+
+| `405 Method Not Allowed`
+| The type of request for this resource is not allowed. For example, some endpoints may be GET only.
+Trying a POST will return this message.
+
+| `422 Unprocessable Entity`
+| The request body failed validation. The response body will include an error provided further information.
+
+|===
+
+For more status codes, see the https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html[w3 standard]
+
+== String formats
+
+|===
+| Format | Sample | Description
+
+| [[iso-8601-date]]ISO-8601 Date
+| "2016-03-29"
+| Represents a date.
+
+| [[iso-8601-datetime]]ISO-8601 Date-Time
+| "2016-03-29T05:00Z"
+| Represents a UTC date-time.
+
+| [[iso-8601-period]]ISO-8601 Period
+| "P2M"
+| Represents a period of time.
+
+|===
+
+include::resources/home.adoc[]

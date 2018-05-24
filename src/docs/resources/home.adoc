@@ -1,0 +1,23 @@
+[[home]]
+
+= Home
+This service uses HATEOAS and will return links based off the user's roles.
+
+[[home]]
+== Request
+include::{snippets}/home/http-request.adoc[]
+
+=== Request (cURL)
+[source,indent=0,role="primary"]
+include::{snippets}/home/curl-request.adoc[]
+
+== Response
+include::{snippets}/home/http-response.adoc[]
+
+=== Response Body
+include::{snippets}/home/response-fields.adoc[]
+
+[[home-links]]
+==== Home Links
+include::{snippets}/home/links.adoc[]
+

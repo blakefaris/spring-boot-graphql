@@ -1,0 +1,98 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'org.springframework.boot' version '2.0.1.RELEASE'
+    id 'nebula.release' version '6.1.1'
+    id 'io.spring.dependency-management' version '1.0.0.RELEASE'
+    id 'com.gorylenko.gradle-git-properties' version '1.4.17'
+    id "org.asciidoctor.convert" version "1.5.3"
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.3.1'
+}
+
+bootRun {
+    systemProperties = System.properties
+    jvmArgs += "-Dspring.output.ansi.enabled=ALWAYS"
+}
+
+bootJar {
+    baseName = project.name
+    // Rest Docs Config
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}") {
+        into 'static/docs'
+    }
+}
+
+group = 'com.blakefaris.graphql'
+description = 'Example Graphql Service'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+ext { buildTime = new Date().format("yyyyMMddHHmm") }
+
+dependencies {
+    compile('org.apache.httpcomponents:httpclient')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-hateoas')
+    compile('org.springframework.boot:spring-boot-starter-web')
+
+    // GraphQL
+    compile('com.graphql-java:graphql-spring-boot-starter:4.0.0')
+    compile('com.graphql-java:graphql-java-tools:4.3.0')
+    // GraphQL UI
+    compile('com.graphql-java:graphiql-spring-boot-starter:4.0.0')
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
+}
+
+processResources {
+    logger.lifecycle("project.properties about to be expanded")
+    logger.lifecycle("----")
+    def map = project.properties.sort { it.key }
+
+    if (logger.isEnabled(LogLevel.DEBUG)) {
+        map.each { k, v -> logger.debug("${k}:${v}") }
+    }
+
+    filesMatching('**/application-actuatorsupport.properties') {
+        expand project.properties
+    }
+}
+
+gitProperties {
+    dateFormat = "yyyy-MM-dd'T'HH:mmZ"
+    dateFormatTimeZone = 'CST'
+}
+
+test {
+    systemProperty "spring.profiles.active", System.getProperty('spring.profiles.active')
+}
+
+//Rest Docs Config
+ext['spring-restdocs.version'] = "2.0.0.RELEASE"
+ext {
+    snippetsDir = file('build/docs/generated-snippets')
+}
+
+task cleanTempDirs(type: Delete) {
+    delete fileTree(dir: 'build/docs/generated-snippets')
+}
+
+asciidoctor {
+    dependsOn test
+    inputs.dir snippetsDir
+    sourceDir = file('src/docs')
+    separateOutputDirs = false
+    attributes 'snippets': snippetsDir
+}
+
+build.dependsOn asciidoctor
