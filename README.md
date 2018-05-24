@@ -12,6 +12,8 @@ To run locally (default profile is `local`) open a command prompt in the project
 ./gradlew bootRun
 ```
 
+Then go to http://localhost:8080/graphiql to view GraphiQl.
+
 ### Run With Profile
 
 #### NonProd
